@@ -26,6 +26,9 @@ class NotasViewController: UIViewController {
     
     private func setup(){
         
+        contentView.listNotesTableView.delegate = self
+        contentView.listNotesTableView.dataSource = self
+        
         setHierarchy()
         setConstraints()
     }
@@ -45,5 +48,17 @@ class NotasViewController: UIViewController {
         ])
     }
 
+}
+
+extension NotasViewController: UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 10
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        return UITableViewCell()
+    }
+    
+    
 }
 
