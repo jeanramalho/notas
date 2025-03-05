@@ -11,6 +11,12 @@ class NotasViewController: UIViewController {
     
     let contentView: NotasView = NotasView()
     
+    var notasArray: [String] = []
+    
+    var notasSalvas: [String] = []
+    
+    var notaAtual: String = ""
+    
     init() {
         super.init(nibName: nil, bundle: nil)
     }
@@ -28,9 +34,17 @@ class NotasViewController: UIViewController {
         
         contentView.listNotesTableView.delegate = self
         contentView.listNotesTableView.dataSource = self
+        contentView.saveButton.addTarget(self, action: #selector(salvarNotas), for: .touchUpInside)
         
         setHierarchy()
         setConstraints()
+    }
+    
+    func buscaNotas(){
+        
+        if let notasSalvas = UserDefaults.standard.object(forKey: "notas") as? [String] {
+            self.notasSalvas = notasSalvas
+        }
     }
     
     private func setHierarchy(){
@@ -47,16 +61,32 @@ class NotasViewController: UIViewController {
             contentView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
         ])
     }
+    
+    @objc func salvarNotas(){
+        notaAtual = contentView.inputNote.text
+        notasArray.append(notaAtual)
+        UserDefaults.standard.set(notasArray, forKey: "notas")
+        buscaNotas()
+        contentView.inputNote.text = ""
+        contentView.listNotesTableView.reloadData()
+    }
+    
 
 }
 
 extension NotasViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 10
+        return notasSalvas.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        return UITableViewCell()
+        let cell = UITableViewCell()
+        cell.textLabel?.text = notasSalvas[indexPath.row]
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        <#code#>
     }
     
     
