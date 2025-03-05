@@ -110,6 +110,7 @@ extension NotasViewController: UITableViewDelegate, UITableViewDataSource {
         indexAtual = indexPath.row
     }
     
+    //para acessar esse metodo comece a escrever commit nao editingStyle
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             notasArray.remove(at: indexPath.row)
