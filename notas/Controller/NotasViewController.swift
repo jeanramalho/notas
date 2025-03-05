@@ -17,6 +17,9 @@ class NotasViewController: UIViewController {
     
     var notaAtual: String = ""
     
+    var indexAtual: Int?
+    
+    
     init() {
         super.init(nibName: nil, bundle: nil)
     }
@@ -31,20 +34,24 @@ class NotasViewController: UIViewController {
     }
     
     private func setup(){
-        
+
         contentView.listNotesTableView.delegate = self
         contentView.listNotesTableView.dataSource = self
         contentView.saveButton.addTarget(self, action: #selector(salvarNotas), for: .touchUpInside)
         
+        loadingNotas()
         setHierarchy()
         setConstraints()
     }
     
+    func loadingNotas(){
+        buscaNotas()
+        notasArray = notasSalvas
+        contentView.listNotesTableView.reloadData()
+    }
+    
     func buscaNotas(){
-        
-        if let notasSalvas = UserDefaults.standard.object(forKey: "notas") as? [String] {
-            self.notasSalvas = notasSalvas
-        }
+        notasSalvas = UserDefaults.standard.object(forKey: "notas") as? [String] ?? []
     }
     
     private func setHierarchy(){
@@ -63,12 +70,20 @@ class NotasViewController: UIViewController {
     }
     
     @objc func salvarNotas(){
-        notaAtual = contentView.inputNote.text
-        notasArray.append(notaAtual)
-        UserDefaults.standard.set(notasArray, forKey: "notas")
-        buscaNotas()
-        contentView.inputNote.text = ""
-        contentView.listNotesTableView.reloadData()
+        
+        if let index = indexAtual {
+            notasArray[index] = contentView.inputNote.text
+            indexAtual = nil
+        } else {
+            notaAtual = contentView.inputNote.text
+            notasArray.append(notaAtual)
+        }
+  
+            UserDefaults.standard.set(notasArray, forKey: "notas")
+            buscaNotas()
+            contentView.inputNote.text = ""
+            contentView.listNotesTableView.reloadData()
+            
     }
     
 
@@ -86,7 +101,8 @@ extension NotasViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        <#code#>
+        contentView.inputNote.text = notasSalvas[indexPath.row]
+        indexAtual = indexPath.row
     }
     
     
