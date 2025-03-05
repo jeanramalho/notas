@@ -110,6 +110,32 @@ extension NotasViewController: UITableViewDelegate, UITableViewDataSource {
         indexAtual = indexPath.row
     }
     
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            notasArray.remove(at: indexPath.row)
+            UserDefaults.standard.set(notasArray, forKey: "notas")
+            buscaNotas()
+            tableView.deleteRows(at: [indexPath], with: .automatic)
+        }
+    }
+    
+    
+    // outro metodo para ativar botao delete da celula
+//    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+//        
+//        let deteteAction = UIContextualAction(style: .destructive, title: "detele") {(action, view, completionHanler) in
+//            self.notasArray.remove(at: indexPath.row)
+//            UserDefaults.standard.set(self.notasArray, forKey: "notas")
+//            self.buscaNotas()
+//            self.contentView.listNotesTableView.deleteRows(at: [indexPath], with: .automatic)
+//            completionHanler(true)
+//        }
+//        
+//        let configuration = UISwipeActionsConfiguration(actions: [deteteAction])
+//        configuration.performsFirstActionWithFullSwipe = true
+//        
+//        return configuration
+//    }
     
 }
 
